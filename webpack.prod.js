@@ -2,6 +2,7 @@ const merge = require("webpack-merge");
 const OptimizeCss = require("optimize-css-assets-webpack-plugin");
 // const HtmlWebpackExternalsPlugin = require("html-webpack-externals-plugin");
 const baseConfig = require("./webpack.base");
+const TerserWebpackPlugin = require("terser-webpack-plugin");
 
 const prodConfig = {
   mode: "production",
@@ -27,6 +28,12 @@ const prodConfig = {
     // }),
   ],
   optimization: {
+    minimizer: [
+      new TerserWebpackPlugin({
+        parallel: true,
+        cache: true,
+      }),
+    ],
     splitChunks: {
       minSize: 0,
       cacheGroups: {

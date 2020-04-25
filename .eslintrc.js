@@ -8,5 +8,6 @@ module.exports = {
   rules: {
     "no-console": 0,
     quotes: 0,
+    "linebreak-style": [0, "error", "windows"],
   },
 };

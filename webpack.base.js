@@ -2,6 +2,11 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const FriendErrorsPlugin = require("friendly-errors-webpack-plugin");
+const speedMeasureWebpackPlugin = require("speed-measure-webpack-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const webpack = require("webpack");
+const smp = new speedMeasureWebpackPlugin();
+
 const glob = require("glob");
 const path = require("path");
 const setMPA = () => {
@@ -37,12 +42,22 @@ const setMPA = () => {
   };
 };
 const { entry, HtmlWebpackPlugins } = setMPA();
-
 module.exports = {
   entry,
   module: {
     rules: [
-      { test: /\.js$/, use: ["babel-loader", "eslint-loader"] },
+      {
+        test: /\.js$/,
+        use: [
+          {
+            loader: "thread-loader",
+            options: {
+              workers: 3,
+            },
+          },
+          "babel-loader",
+        ],
+      },
       {
         test: /.(css|less)$/,
         use: [
@@ -70,12 +85,36 @@ module.exports = {
       },
       {
         test: /.(png|jpg|gif|jpeg)$/,
-        use: {
-          loader: "file-loader",
-          options: {
-            name: "[name]_[hash].[ext]",
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "[name]_[hash].[ext]",
+            },
           },
-        },
+          {
+            loader: "image-webpack-loader",
+            options: {
+              mozjpeg: {
+                progressive: true,
+                quality: 65,
+              },
+              optipng: {
+                enabled: false,
+              },
+              pngquant: {
+                quality: [0.65, 0.90],
+                speed: 4,
+              },
+              gifsicle: {
+                interlaced: false,
+              },
+              webp: {
+                quality: 75,
+              },
+            },
+          },
+        ],
       },
     ],
   },
@@ -86,6 +125,10 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "[name]_[contenthash:8].css",
     }),
+    // new webpack.DllReferencePlugin({
+    //   manifest: require("./build/library/library.json"),
+    // }),
+    // new BundleAnalyzerPlugin(),
   ].concat(HtmlWebpackPlugins),
-  stats: "errors-only",
+    stats: "errors-only",
 };

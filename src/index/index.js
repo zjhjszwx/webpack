@@ -1,2 +1,2 @@
-console.log("index");
 document.write("helloworld 1");
+console.log("index");

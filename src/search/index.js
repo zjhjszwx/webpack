@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import logo from "../images/node.png";
 import "./search.less";
-import sum from "num-add-zjh";
 class Search extends React.Component {
   constructor(props) {
     super(props);
@@ -19,7 +18,7 @@ class Search extends React.Component {
   }
   render() {
     const { Text } = this.state;
-    console.log("search", Text, sum(1, 2));
+    console.log("search", Text);
 
     return (
       <div className="search-text">
