@@ -56,6 +56,8 @@ module.exports = {
             },
           },
           "babel-loader",
+          path.resolve("./loaders/a-loader.js"),
+          path.resolve("./loaders/b-loader.js"),
         ],
       },
       {
@@ -103,7 +105,7 @@ module.exports = {
                 enabled: false,
               },
               pngquant: {
-                quality: [0.65, 0.90],
+                quality: [0.65, 0.9],
                 speed: 4,
               },
               gifsicle: {
@@ -130,5 +132,5 @@ module.exports = {
     // }),
     // new BundleAnalyzerPlugin(),
   ].concat(HtmlWebpackPlugins),
-    stats: "errors-only",
+  stats: "errors-only",
 };
